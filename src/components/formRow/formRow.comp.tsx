@@ -134,6 +134,15 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
     };
 
     switch (field.type) {
+      case 'date':
+        //kk-1042
+        return <input type="date" {...inputProps()} onChange={(e) => changeCallback(field.name, e.target.value+"T00:00:01.000Z")} value={field.value.substr(0, 10)}/>;
+      case 'time':
+        //kk-1042
+        return <input type="time" {...inputProps()} onChange={(e) => changeCallback(field.name, "9999-12-31T"+e.target.value+":01.000Z")} value={(field.value.substr(0, 16)).substr(11)}/>;
+      case 'datetime':
+        //kk-1042
+        return <input type="datetime-local" {...inputProps()} onChange={(e) => changeCallback(field.name, e.target.value+":01.000Z")} value={field.value.substr(0, 16)}/>;
       case 'boolean':
         return <input type="checkbox" {...inputProps()} checked={field.value} onChange={(e) => changeCallback(field.name, e.target.checked, true)} />;
       case 'select':

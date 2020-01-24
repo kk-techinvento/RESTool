@@ -245,8 +245,9 @@ const PageComp = ({ context }: IProps) => {
       return <Loader />;
     }
 
-    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];    
     const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
+    
     let filteredItems = items;
     
     if (filter && fieldsToFilter.length) {
@@ -255,6 +256,10 @@ const PageComp = ({ context }: IProps) => {
         fieldsToFilter.forEach((fieldName) => {
           const value = item[fieldName];
           if (typeof value === 'string' && value.toLowerCase().indexOf(filter) >= 0) {
+            passFilter = true;
+          }
+          //kk-1042 filters here
+          if (typeof value === 'number' && (value+"").toLowerCase().indexOf(filter) >= 0) {
             passFilter = true;
           }
         })
@@ -298,16 +303,17 @@ const PageComp = ({ context }: IProps) => {
   function renderPageContent() {
     const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
     const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
-
+    const labelsOfFieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.label);  // kk-1042
     return (
       <React.Fragment>
-        <QueryParams 
+        {/* kk-1042 */}
+        {/* <QueryParams 
           initialParams={queryParams}
           submitCallback={submitQueryParams}
-        />
+        /> */}
         {
           fieldsToFilter.length > 0 &&
-          <FilterField onChange={setFilter} />
+          <FilterField onChange={setFilter} filterBy={labelsOfFieldsToFilter}/> 
         }
         {
           error ? 

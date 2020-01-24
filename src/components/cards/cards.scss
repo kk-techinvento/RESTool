@@ -24,6 +24,21 @@
 
   }
 
+  .card-col-1 {
+    // kk-1042
+    flex-basis: 90% !important;
+  }
+
+  .card-col-2 {
+    // kk-1042
+    flex-basis: 40% !important;
+  }
+
+  .card-col-3 {
+    // kk-1042
+    flex-basis: 30% !important;
+  }
+
   .card-row {
     margin: 0 20px 10px;
     display: flex;

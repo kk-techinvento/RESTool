@@ -26,6 +26,15 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
     switch (type) {
       case 'text':
         return <span>{value}</span>;
+      case 'date':
+        //kk-1042
+        return <span>{value?value.substr(0, 10):value}</span>;
+      case 'time':
+        //kk-1042
+        return <span>{value?(value.substr(0, 16)).substr(11):value}</span>;
+      case 'datetime':
+        //kk-1042
+        return <span>{new Date(value).toLocaleString()}</span>;
       case 'boolean':
         return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
       case 'image':
@@ -44,7 +53,8 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
       {
         items.map((item, cardIdx) => {
           return (
-            <div className="card" key={`card_${cardIdx}`}>
+            /* kk-1042 */
+            <div className="card card-col-3" key={`card_${cardIdx}`}> 
               {
                 fields.map((field, fieldIdx) => {
                   const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);

@@ -26,6 +26,15 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
     switch (type) {
       case 'text':
         return <span>{value}</span>;
+      case 'date':
+        //kk-1042
+        return <span>{value?value.substr(0, 10):value}</span>;
+      case 'time':
+        //kk-1042
+        return <span>{value?(value.substr(0, 16)).substr(11):value}</span>;
+      case 'datetime':
+        //kk-1042
+        return <span>{new Date(value).toLocaleString()}</span>;
       case 'boolean':
         return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
       case 'image':

@@ -52,7 +52,8 @@ export interface IConfigMethod {
   fields: IConfigInputField[] | IConfigDisplayField[]
 }
 
-export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'integer' | 'number' | 'boolean' | 'email' | 'color' | 'select' | 'array' | 'file' | 'password' | 'note' | 'hidden';
+export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'integer' | 'number' | 'boolean' | 'email' | 'color' | 'select' | 'array' | 'file' | 'password' | 'note' | 'hidden' |
+  'datetime' | 'date' | 'time'; //kk-1042
 
 export interface IConfigInputField {
   originalName: string
@@ -82,7 +83,8 @@ export interface IConfigOptionSource {
   requestHeaders: any
 }
 
-export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean';
+export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean' | 
+  'datetime' | 'date' | 'time'; //kk-1042
 
 export interface IConfigDisplayField {
   name: string
