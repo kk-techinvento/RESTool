@@ -11,7 +11,7 @@ import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Table } from '../table/table.comp';
 import { Cards } from '../cards/cards.comp';
-import { QueryParams } from '../queryParams/queryParams.comp';
+// import { QueryParams } from '../queryParams/queryParams.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
 import { FilterField } from '../filterField/filterField.comp';
@@ -224,21 +224,22 @@ const PageComp = ({ context }: IProps) => {
     }
   }
 
-  function submitQueryParams(updatedParams: IConfigInputField[]) {
-    setQueryParams(updatedParams);
+  // kk-1042 hid this function using comment
+  // function submitQueryParams(updatedParams: IConfigInputField[]) {
+  //   setQueryParams(updatedParams);
 
-    if (loading) {
-      return;
-    }
+  //   if (loading) {
+  //     return;
+  //   }
 
-    // Building query string
-    const queryState: string = queryParams.map((queryParam, idx) => {
-      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
-    }).join('&');
+  //   // Building query string
+  //   const queryState: string = queryParams.map((queryParam, idx) => {
+  //     return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
+  //   }).join('&');
 
-    // Pushing query state to url
-    push(queryState);
-  }
+  //   // Pushing query state to url
+  //   push(queryState);
+  // }
 
   function renderTable() {
     if (loading) {
