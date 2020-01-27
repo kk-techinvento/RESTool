@@ -32,6 +32,7 @@ export interface IConfigPage {
   requestHeaders: any
   methods: IConfigMethods
   customActions: IConfigCustomAction[]
+  subPosts: IConfigPage[] | null
 }
 
 export interface IConfigMethods {
