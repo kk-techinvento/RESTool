@@ -36,11 +36,17 @@ const PageComp = ({ context }: IProps) => {
   const { push, location } = useHistory();
   const { activePage, error, setError, httpService } = context;
   const pageHeaders: any = activePage?.requestHeaders || {};
+  const pageSubPosts: IConfigPage[] | undefined = activePage?.subPosts || [];
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const customActions: IConfigCustomAction[] = activePage?.customActions || [];
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
+  let framePostConfig: IConfigPostMethod[] | undefined = pageSubPosts.length ? [] : undefined;
+  for (let index = 0; index < pageSubPosts.length; index++) {
+    const element = pageSubPosts[index].methods.post;
+    framePostConfig?.push(element)
+  }
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
   const [loading, setLoading] = useState<boolean>(false);
@@ -49,7 +55,7 @@ const PageComp = ({ context }: IProps) => {
   const [items, setItems] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>('');
 
-  
+
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
 
@@ -59,12 +65,12 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function openEditPopup(rawData: any) {
-    const params: IPopupProps = { 
+    const params: IPopupProps = {
       rawData,
-      type: 'update', 
-      title: 'Update Item', 
+      type: 'update',
+      title: 'Update Item',
       config: putConfig as IConfigPutMethod,
-      getSingleConfig, 
+      getSingleConfig,
       submitCallback: async (body: any, containFiles: boolean) => {
         return await updateItem(body, rawData, containFiles);
       }
@@ -74,11 +80,11 @@ const PageComp = ({ context }: IProps) => {
   }
 
   function openCustomActionPopup(rawData: any, action: IConfigCustomAction) {
-    const params: IPopupProps = { 
+    const params: IPopupProps = {
       rawData,
-      type: 'action', 
-      title: action.name || 'Custom Action', 
-      config: action as IConfigCustomAction, 
+      type: 'action',
+      title: action.name || 'Custom Action',
+      config: action as IConfigCustomAction,
       submitCallback: async (body: any, containFiles: boolean) => {
         return await performAction(body, rawData, action, containFiles);
       }
@@ -89,10 +95,10 @@ const PageComp = ({ context }: IProps) => {
 
   async function performAction(body: any, rawData: any, action: IConfigCustomAction, containFiles: boolean) {
     const { url, requestHeaders, actualMethod } = action;
-    
+
     return await httpService.fetch({
-      method: actualMethod || 'put', 
-      origUrl: url, 
+      method: actualMethod || 'put',
+      origUrl: url,
       rawData,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
@@ -113,7 +119,7 @@ const PageComp = ({ context }: IProps) => {
         queryParam.value = queryParam.value || '';
       }
       return queryParam;
-    }); 
+    });
 
     return finalQueryParams
   }
@@ -126,12 +132,12 @@ const PageComp = ({ context }: IProps) => {
       if (!getAllConfig) {
         throw new Error('Get all method is not defined.');
       }
-      
+
       const { url, requestHeaders, actualMethod, dataPath, sortBy } = getAllConfig;
       const result = await httpService.fetch({
-        method: actualMethod || 'get', 
-        origUrl: url, 
-        queryParams: extractQueryParams(), 
+        method: actualMethod || 'get',
+        origUrl: url,
+        queryParams: extractQueryParams(),
         headers: Object.assign({}, pageHeaders, requestHeaders || {})
       });
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
@@ -145,7 +151,7 @@ const PageComp = ({ context }: IProps) => {
       }
 
       const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
-      
+
       setItems(orderedItems);
     } catch (e) {
       setError(e.message);
@@ -155,15 +161,35 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function addItem(body: any, containFiles?: boolean) {
+
+    // if (framePostConfig) {
+    //   try {
+    //     const { url, requestHeaders, actualMethod } = framePostConfig;
+    //     return await httpService.fetch({
+    //       method: actualMethod || 'post',
+    //       origUrl: url,
+    //       body: containFiles ? body : JSON.stringify(body),
+    //       headers: {
+    //         ...pageHeaders,
+    //         ...(requestHeaders || {}),
+    //         ...(containFiles ? {} : { 'content-type': 'application/json' })
+    //       },
+    //       responseType: 'boolean'
+    //     });
+    //   } catch (error) {
+    //     console.error("framePostConfig ", error);
+    //   }
+    // }
+
     if (!postConfig) {
       throw new Error('Post method is not defined.');
     }
-      
+
     const { url, requestHeaders, actualMethod } = postConfig;
-    
+
     return await httpService.fetch({
-      method: actualMethod || 'post', 
-      origUrl: url, 
+      method: actualMethod || 'post',
+      origUrl: url,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
         ...pageHeaders,
@@ -178,12 +204,12 @@ const PageComp = ({ context }: IProps) => {
     if (!putConfig) {
       throw new Error('Put method is not defined.');
     }
-    
+
     const { url, requestHeaders, actualMethod } = putConfig;
-    
+
     return await httpService.fetch({
-      method: actualMethod || 'put', 
-      origUrl: url, 
+      method: actualMethod || 'put',
+      origUrl: url,
       rawData,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
@@ -197,7 +223,7 @@ const PageComp = ({ context }: IProps) => {
 
   async function deleteItem(item: any) {
     const approved: boolean = window.confirm('Are you sure you want to delete this item?');
-    
+
     if (!approved) {
       return;
     }
@@ -206,13 +232,13 @@ const PageComp = ({ context }: IProps) => {
       if (!deleteConfig) {
         throw new Error('Delete method is not defined.');
       }
-      
+
       const { url, requestHeaders, actualMethod } = deleteConfig;
       const success = await httpService.fetch({
-        method: actualMethod || 'delete', 
-        origUrl: url, 
+        method: actualMethod || 'delete',
+        origUrl: url,
         rawData: item,
-        headers: Object.assign({}, pageHeaders, requestHeaders || {}), 
+        headers: Object.assign({}, pageHeaders, requestHeaders || {}),
         responseType: 'boolean'
       });
 
@@ -246,11 +272,11 @@ const PageComp = ({ context }: IProps) => {
       return <Loader />;
     }
 
-    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];    
+    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
     const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
-    
+
     let filteredItems = items;
-    
+
     if (filter && fieldsToFilter.length) {
       filteredItems = items.filter((item) => {
         let passFilter = false;
@@ -260,7 +286,7 @@ const PageComp = ({ context }: IProps) => {
             passFilter = true;
           }
           //kk-1042 filters here
-          if (typeof value === 'number' && (value+"").toLowerCase().indexOf(filter) >= 0) {
+          if (typeof value === 'number' && (value + "").toLowerCase().indexOf(filter) >= 0) {
             passFilter = true;
           }
         })
@@ -274,29 +300,35 @@ const PageComp = ({ context }: IProps) => {
 
     if (getAllConfig?.display.type === 'cards') {
       return (
-        <Cards 
+        <Cards
           callbacks={{
-            delete: deleteConfig ? deleteItem : () => {},
-            put: putConfig ? openEditPopup : () => {},
-            action: customActions.length ? openCustomActionPopup : () => {},
+            delete: deleteConfig ? deleteItem : () => { },
+            put: putConfig ? openEditPopup : () => { },
+            action: customActions.length ? openCustomActionPopup : () => { },
           }}
           fields={fields}
-          items={filteredItems} 
+          items={filteredItems}
           customActions={customActions}
+          framePostConfig={framePostConfig}
+          httpService={httpService}
+          pageHeaders={pageHeaders}
         />
       );
     }
 
     return (
-      <Table 
+      <Table
         callbacks={{
-          delete: deleteConfig ? deleteItem : () => {},
-          put: putConfig ? openEditPopup : () => {},
-          action: customActions.length ? openCustomActionPopup : () => {},
+          delete: deleteConfig ? deleteItem : () => { },
+          put: putConfig ? openEditPopup : () => { },
+          action: customActions.length ? openCustomActionPopup : () => { },
         }}
         fields={fields}
-        items={filteredItems} 
+        items={filteredItems}
         customActions={customActions}
+        framePostConfig={framePostConfig}
+        httpService={httpService}
+        pageHeaders={pageHeaders}
       />
     );
   }
@@ -314,12 +346,12 @@ const PageComp = ({ context }: IProps) => {
         /> */}
         {
           fieldsToFilter.length > 0 &&
-          <FilterField onChange={setFilter} filterBy={labelsOfFieldsToFilter}/> 
+          <FilterField onChange={setFilter} filterBy={labelsOfFieldsToFilter} />
         }
         {
-          error ? 
-          <div className="app-error">{error}</div> :
-          renderTable()
+          error ?
+            <div className="app-error">{error}</div> :
+            renderTable()
         }
       </React.Fragment>
     )
@@ -330,7 +362,7 @@ const PageComp = ({ context }: IProps) => {
     context.setActivePage(nextActivePage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
-  
+
   useEffect(() => {
     setQueryParams(extractQueryParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -356,6 +388,14 @@ const PageComp = ({ context }: IProps) => {
           postConfig &&
           <Button className="add-item" color="green" onClick={() => setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })}>+ Add Item</Button>
         }
+        {/* {
+          framePostConfig &&
+            framePostConfig.map((tabFrame, index) => <Button className="open-tab" onClick={() => {
+              console.log("framePostConfig", tabFrame);
+              setOpenedPopup({ type: 'add', title: 'Add ' + pageSubPosts[index].name, config: tabFrame, submitCallback: addItem });
+            }}
+              key={index}>{pageSubPosts[index].name} </Button>)
+        } */}
       </header>
       <main className="app-page-content">
         {renderPageContent()}

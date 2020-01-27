@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { TConfigDisplayField, IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
+import { IConfigPostMethod, TConfigDisplayField, IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
+import { FormPopup } from '../formPopup/formPopup.comp';
 import { Button } from '../button/button.comp';
+import HttpService from '../../services/http.service';
 
 import './table.scss';
 
@@ -15,9 +17,27 @@ interface IProps {
   }
   fields: IConfigDisplayField[]
   customActions?: IConfigCustomAction[]
+  framePostConfig?: IConfigPostMethod[] | undefined
+  httpService: HttpService
+  pageHeaders: any
 }
 
-export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
+
+interface IPopupProps {
+  type: 'add' | 'update' | 'action'
+  title: string
+  config: IConfigPostMethod
+  submitCallback: (body: any, containFiles: boolean) => void
+  rawData?: {},
+}
+
+
+export const Table = ({ pageHeaders, httpService, items, fields, callbacks, customActions, framePostConfig }: IProps) => {
+  const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
+  const [postConfig, setPostConfig] = useState<null | IConfigPostMethod>(null);
+  function closeFormPopup() {
+    setOpenedPopup(null);
+  }
   function renderTableCell(type: TConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -28,10 +48,10 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
         return <span>{value}</span>;
       case 'date':
         //kk-1042
-        return <span>{value?value.substr(0, 10):value}</span>;
+        return <span>{value ? value.substr(0, 10) : value}</span>;
       case 'time':
         //kk-1042
-        return <span>{value?(value.substr(0, 16)).substr(11):value}</span>;
+        return <span>{value ? (value.substr(0, 16)).substr(11) : value}</span>;
       case 'datetime':
         //kk-1042
         return <span>{new Date(value).toLocaleString()}</span>;
@@ -46,6 +66,46 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
       default:
         return value;
     }
+  }
+
+  async function addItem(body: any, containFiles?: boolean) {
+
+    // if (framePostConfig) {
+    //   try {
+    //     const { url, requestHeaders, actualMethod } = framePostConfig;
+    //     return await httpService.fetch({
+    //       method: actualMethod || 'post',
+    //       origUrl: url,
+    //       body: containFiles ? body : JSON.stringify(body),
+    //       headers: {
+    //         ...pageHeaders,
+    //         ...(requestHeaders || {}),
+    //         ...(containFiles ? {} : { 'content-type': 'application/json' })
+    //       },
+    //       responseType: 'boolean'
+    //     });
+    //   } catch (error) {
+    //     console.error("framePostConfig ", error);
+    //   }
+    // }
+
+    if (!postConfig) {
+      throw new Error('Post method is not defined.');
+    }
+
+    const { url, requestHeaders, actualMethod } = postConfig;
+
+    return await httpService.fetch({
+      method: actualMethod || 'post',
+      origUrl: url,
+      body: containFiles ? body : JSON.stringify(body),
+      headers: {
+        ...pageHeaders,
+        ...(requestHeaders || {}),
+        ...(containFiles ? {} : { 'content-type': 'application/json' })
+      },
+      responseType: 'boolean'
+    });
   }
 
   return (
@@ -95,6 +155,21 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
                         </Button>
                       }
                     </div>
+                    <div className="actions-wrapper">
+                      {
+                        (framePostConfig && framePostConfig.length) &&
+                        framePostConfig.map((actionPostConfig, idx) => (
+                          <Button key={`actionPostConfig_${rowIdx}_${idx}`} onClick={() => {
+                            // when we have foreign key, put it in as actionPostConfig.fields.push({name:"primary_key_name",type:"number", label:"primary_key_label"})
+                            // NOTE: current table's primary key is foreign key for actionPostConfig table
+                            setPostConfig(actionPostConfig);
+                            if(postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem})
+                          }} title={"title"}>
+                            <i className={`fa fa-${'cogs'}`} aria-hidden="true"></i>
+                          </Button>
+                        ))
+                      }
+                    </div>
                   </td>
                 </tr>
               );
@@ -102,6 +177,16 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
           }
         </tbody>
       </table>
+      {
+        openedPopup &&
+        <FormPopup
+          title={openedPopup.title}
+          closeCallback={closeFormPopup}
+          submitCallback={openedPopup.submitCallback}
+          fields={openedPopup.config?.fields || []}
+          rawData={openedPopup.rawData}
+        />
+      }
     </div>
   );
 }
