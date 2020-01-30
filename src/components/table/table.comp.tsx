@@ -166,7 +166,7 @@ export const Table = ({ pageHeaders, httpService, items, fields, callbacks, cust
                             setPostConfig(actionPostConfig);
                             if(postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem})
                           }} title={"title"}>
-                            <i className={`fa fa-${actionPostConfig.fields[0].icon?actionPostConfig.fields[0].icon:'cogs'}`} aria-hidden="true"></i>
+                            <i className={`fa fa-${actionPostConfig.icon?actionPostConfig.icon:'cogs'}`} aria-hidden="true"></i>
                           </Button>
                         ))
                       }

@@ -74,7 +74,6 @@ export interface IConfigInputField {
   urlReplaceOnly: boolean
   foreignKey: boolean
   foreignKeyValue: number
-  icon: string
 }
 
 export interface IConfigOptionSource {
@@ -105,7 +104,7 @@ export interface IConfigGetAllMethod extends IConfigMethod {
   display: {
     type: 'table' | 'cards',
     fields: IConfigDisplayField[] // Deprecated
-  },
+  }
   sortBy: string
   fields: IConfigDisplayField[]
 }
@@ -116,6 +115,7 @@ export interface IConfigGetSingleMethod extends IConfigMethod {
 
 export interface IConfigPostMethod extends IConfigMethod {
   fields: IConfigInputField[]
+  icon: string
 }
 
 export interface IConfigPutMethod extends IConfigMethod {

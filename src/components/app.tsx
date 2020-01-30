@@ -33,10 +33,10 @@ function App() {
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [error, setError] = useState<string | null>(null);
 
-  async function loadConfig(url: string): Promise<void> {
+  async function loadConfig(url: string | null, configObject: IConfig | null): Promise<void> {
     try {
-      const remoteConfig: IConfig = await ConfigService.getRemoteConfig(url);
-      
+      const remoteConfig: IConfig = configObject && !url ? configObject : await ConfigService.getRemoteConfig(url || "");
+
       // Setting global config for httpService
       httpService.baseUrl = remoteConfig.baseUrl || '';
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
@@ -49,10 +49,12 @@ function App() {
       }
 
       if (config?.remoteUrl) {
-        return await loadConfig(config.remoteUrl);
+        return await loadConfig(config.remoteUrl, null);
       }
 
       setConfig(remoteConfig);
+      console.log("new config: ", config);
+      
     } catch (e) {
       console.error('Could not load config file', e);
     }
@@ -85,7 +87,7 @@ function App() {
   }
 
   useEffect(() => {
-    loadConfig('./config.json');
+    if(!config) loadConfig('./config.json', null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -94,47 +96,72 @@ function App() {
     if (!isValid) {
       setError(errorMessage);
       return;
+    } else {
+      console.log("new config", config);
+      loadConfig(null, config)
     }
   }, [config]);
 
   const appName: string = config?.name || defaultAppName;
 
-  return (
-    <div className="restool-app">
-      {
-        !config ? 
-        <div className="app-error">
-          {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
-        </div> :
-        <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
-          {
-            config.customStyles &&
-            <CustomStyles 
-              styles={config.customStyles} 
-            />
-          }
-          <Router>
-            <aside>
-              <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>
-              {
-                <Navigation />
-              }
-            </aside>
-            {
-              config &&
-              <Switch>
-                <Route exact path="/:page" component={Page} />
-                <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
-              </Switch>
-            }
-            <ToastContainer 
-              position={toast.POSITION.TOP_CENTER} 
-              autoClose={4000} 
-              draggable={false} 
-            />
-          </Router>
-        </AppContext.Provider>
+  let uploadAction = (data: any) => {
+    console.log("uploading ", data);
+    if (data.length && data.length < 2) {
+      let fileReader = new FileReader();
+      fileReader.onloadend = (e) => {
+        let jsonText = "" + e.target?.result;
+        console.log("file read", jsonText);
+
+        let newFileName = (new Date()).valueOf() + ".json";
+        
+        console.log(window.location.host + "/public/" + newFileName);
+        setConfig(JSON.parse(jsonText));
       }
+      fileReader.readAsText(data[0]);
+    }
+  }
+
+  return (
+    <div>
+      <div>
+        <input type="file" title="upload config file" onChange={(e) => uploadAction(e.target.files)} />
+      </div>
+      <div className="restool-app">
+        {
+          !config ?
+            <div className="app-error">
+              {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
+            </div> :
+            <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
+              {
+                config.customStyles &&
+                <CustomStyles
+                  styles={config.customStyles}
+                />
+              }
+              <Router>
+                <aside>
+                  <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>
+                  {
+                    <Navigation />
+                  }
+                </aside>
+                {
+                  config &&
+                  <Switch>
+                    <Route exact path="/:page" component={Page} />
+                    <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
+                  </Switch>
+                }
+                <ToastContainer
+                  position={toast.POSITION.TOP_CENTER}
+                  autoClose={4000}
+                  draggable={false}
+                />
+              </Router>
+            </AppContext.Provider>
+        }
+      </div>
     </div>
   );
 }
