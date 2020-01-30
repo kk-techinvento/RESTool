@@ -17,7 +17,7 @@ interface IProps {
   }
   fields: IConfigDisplayField[]
   customActions?: IConfigCustomAction[]
-  framePostConfig?: IConfigPostMethod[] | undefined
+  subPostsConfig?: IConfigPostMethod[] | undefined
   httpService: HttpService
   pageHeaders: any
 }
@@ -30,7 +30,7 @@ interface IPopupProps {
   rawData?: {},
 }
 
-export const Cards = ({ items, fields, callbacks, customActions , framePostConfig, httpService, pageHeaders}: IProps) => {
+export const Cards = ({ items, fields, callbacks, customActions , subPostsConfig, httpService, pageHeaders}: IProps) => {
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [postConfig, setPostConfig] = useState<null | IConfigPostMethod>(null);
   function closeFormPopup() {
@@ -68,9 +68,9 @@ export const Cards = ({ items, fields, callbacks, customActions , framePostConfi
 
   async function addItem(body: any, containFiles?: boolean) {
 
-    // if (framePostConfig) {
+    // if (subPostsConfig) {
     //   try {
-    //     const { url, requestHeaders, actualMethod } = framePostConfig;
+    //     const { url, requestHeaders, actualMethod } = subPostsConfig;
     //     return await httpService.fetch({
     //       method: actualMethod || 'post',
     //       origUrl: url,
@@ -83,7 +83,7 @@ export const Cards = ({ items, fields, callbacks, customActions , framePostConfi
     //       responseType: 'boolean'
     //     });
     //   } catch (error) {
-    //     console.error("framePostConfig ", error);
+    //     console.error("subPostsConfig ", error);
     //   }
     // }
 
@@ -151,8 +151,8 @@ export const Cards = ({ items, fields, callbacks, customActions , framePostConfi
               </div>
               <div className="actions-wrapper">
                 {
-                  (framePostConfig && framePostConfig.length) &&
-                  framePostConfig.map((actionPostConfig, idx) => (
+                  (subPostsConfig && subPostsConfig.length) &&
+                  subPostsConfig.map((actionPostConfig, idx) => actionPostConfig.fields.find(field=>field.foreignKey)?(
                     <Button key={`actionPostConfig_${cardIdx}_${idx}`} onClick={() => {
                       // when we have foreign key, put it in as actionPostConfig.fields.push({name:"primary_key_name",type:"number", label:"primary_key_label"})
                       // NOTE: current table's primary key is foreign key for actionPostConfig table
@@ -162,7 +162,7 @@ export const Cards = ({ items, fields, callbacks, customActions , framePostConfi
                     }} title={"title"}>
                       <i className={`fa fa-${actionPostConfig.icon?actionPostConfig.icon:'cogs'}`} aria-hidden="true"></i>
                     </Button>
-                  ))
+                  ):"")
                 }
               </div>
             </div>

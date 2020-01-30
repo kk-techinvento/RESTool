@@ -42,10 +42,10 @@ const PageComp = ({ context }: IProps) => {
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
-  let framePostConfig: IConfigPostMethod[] | undefined = pageSubPosts.length ? [] : undefined;
+  let subPostsConfig: IConfigPostMethod[] | undefined = pageSubPosts.length ? [] : undefined;
   for (let index = 0; index < pageSubPosts.length; index++) {
     const element = pageSubPosts[index].methods.post;
-    framePostConfig?.push(element)
+    subPostsConfig?.push(element)
   }
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
@@ -162,9 +162,9 @@ const PageComp = ({ context }: IProps) => {
 
   async function addItem(body: any, containFiles?: boolean) {
 
-    // if (framePostConfig) {
+    // if (subPostsConfig) {
     //   try {
-    //     const { url, requestHeaders, actualMethod } = framePostConfig;
+    //     const { url, requestHeaders, actualMethod } = subPostsConfig;
     //     return await httpService.fetch({
     //       method: actualMethod || 'post',
     //       origUrl: url,
@@ -177,7 +177,7 @@ const PageComp = ({ context }: IProps) => {
     //       responseType: 'boolean'
     //     });
     //   } catch (error) {
-    //     console.error("framePostConfig ", error);
+    //     console.error("subPostsConfig ", error);
     //   }
     // }
 
@@ -309,7 +309,7 @@ const PageComp = ({ context }: IProps) => {
           fields={fields}
           items={filteredItems}
           customActions={customActions}
-          framePostConfig={framePostConfig}
+          subPostsConfig={subPostsConfig}
           httpService={httpService}
           pageHeaders={pageHeaders}
         />
@@ -326,7 +326,7 @@ const PageComp = ({ context }: IProps) => {
         fields={fields}
         items={filteredItems}
         customActions={customActions}
-        framePostConfig={framePostConfig}
+        subPostsConfig={subPostsConfig}
         httpService={httpService}
         pageHeaders={pageHeaders}
       />
@@ -389,9 +389,9 @@ const PageComp = ({ context }: IProps) => {
           <Button className="add-item" color="green" onClick={() => setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })}>+ Add Item</Button>
         }
         {/* {
-          framePostConfig &&
-            framePostConfig.map((tabFrame, index) => <Button className="open-tab" onClick={() => {
-              console.log("framePostConfig", tabFrame);
+          subPostsConfig &&
+            subPostsConfig.map((tabFrame, index) => <Button className="open-tab" onClick={() => {
+              console.log("subPostsConfig", tabFrame);
               setOpenedPopup({ type: 'add', title: 'Add ' + pageSubPosts[index].name, config: tabFrame, submitCallback: addItem });
             }}
               key={index}>{pageSubPosts[index].name} </Button>)
