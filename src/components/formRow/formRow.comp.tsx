@@ -186,6 +186,9 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         return <textarea {...inputProps('Enter text...')}></textarea>;
       case 'number':
       case 'integer':
+        if(field.foreignKey){
+          return <input type="number"  {...inputProps('0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} value={field.foreignKeyValue} disabled/>;
+        }
         return <input type="number"  {...inputProps('0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} />;
       case 'color':
         return <input type="color" {...inputProps('Enter color...')}/>;

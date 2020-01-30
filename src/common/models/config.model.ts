@@ -72,6 +72,9 @@ export interface IConfigInputField {
   useInUrl: boolean
   accept: string
   urlReplaceOnly: boolean
+  foreignKey: boolean
+  foreignKeyValue: number
+  icon: string
 }
 
 export interface IConfigOptionSource {

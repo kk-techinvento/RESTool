@@ -130,7 +130,7 @@ export const Cards = ({ items, fields, callbacks, customActions , framePostConfi
               <div className="actions-wrapper">
                 {
                   callbacks.put &&
-                  <Button onClick={() => callbacks.put(item)} title="Edit">
+                  <Button onClick={() => callbacks.put(item)} title="Edit" color="green">
                     <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                   </Button>
                 }
@@ -144,7 +144,7 @@ export const Cards = ({ items, fields, callbacks, customActions , framePostConfi
                 }
                 {
                   callbacks.delete &&
-                  <Button onClick={() => callbacks.delete(item)} title="Delete">
+                  <Button onClick={() => callbacks.delete(item)} title="Delete" color="red">
                     <i className="fa fa-times" aria-hidden="true"></i>
                   </Button>
                 }
@@ -156,10 +156,11 @@ export const Cards = ({ items, fields, callbacks, customActions , framePostConfi
                     <Button key={`actionPostConfig_${cardIdx}_${idx}`} onClick={() => {
                       // when we have foreign key, put it in as actionPostConfig.fields.push({name:"primary_key_name",type:"number", label:"primary_key_label"})
                       // NOTE: current table's primary key is foreign key for actionPostConfig table
+                      actionPostConfig.fields[0].foreignKeyValue = item[Object.keys(item)[0]];
                       setPostConfig(actionPostConfig);
                       if (postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })
                     }} title={"title"}>
-                      <i className={`fa fa-${'cogs'}`} aria-hidden="true"></i>
+                      <i className={`fa fa-${actionPostConfig.fields[0].icon?actionPostConfig.fields[0].icon:'cogs'}`} aria-hidden="true"></i>
                     </Button>
                   ))
                 }
