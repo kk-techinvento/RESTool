@@ -187,7 +187,8 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       case 'number':
       case 'integer':
         if(field.foreignKey){
-          return <input type="number"  {...inputProps('0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} value={field.foreignKeyValue} disabled/>;
+          field.value = field.foreignKeyValue;
+          return <input type="number"  {...inputProps('0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} value={field.value} disabled/>;
         }
         return <input type="number"  {...inputProps('0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} />;
       case 'color':
