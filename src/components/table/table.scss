@@ -75,6 +75,23 @@
         &:hover {
           background: v(actionButtonHoverBackground, #ebebeb);
         }
+
+        &.green {
+          background: #1cb841;
+          color: #fff;
+      
+          &:hover {
+            background-color: #2dc450;
+          }
+        }
+        &.red {
+          background: orangered;
+          color: #fff;
+        
+          &:hover {
+            background-color: red;
+          }
+        }
       }
     }
 
