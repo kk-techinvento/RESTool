@@ -155,22 +155,18 @@ export const Cards = ({ items, fields, callbacks, customActions, subPostsConfig,
                 {
                   (subPostsConfig && subPostsConfig.length) &&
                   subPostsConfig.map((actionPostConfig, idx) => actionPostConfig.fields.find(field => field.foreignKey) ? (
-                    <div style={{ display: "block" }}>
-                      <Button key={`actionPostConfig_${cardIdx}_${idx}`} onClick={() => {
+                    <div style={{ display: "block" }} key={idx}>
+                      <Button key={`actionPostConfig_1_${cardIdx}_${idx}`} onClick={() => {
                         // when we have foreign key, put it in as actionPostConfig.fields.push({name:"primary_key_name",type:"number", label:"primary_key_label"})
                         // NOTE: current table's primary key is foreign key for actionPostConfig table
                         actionPostConfig.fields[0].foreignKeyValue = item[Object.keys(item)[0]];
                         setPostConfig(actionPostConfig);
                         if (postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })
+                        
                       }} title={"Add New " + (pageSubPosts?.[idx]?.name)} color="blue">
                         <i className={`fa fa-${actionPostConfig?.icon ? actionPostConfig?.icon : 'cogs'}`} aria-hidden="true"></i>
                       </Button>
-                      <Button key={`actionPostConfig_${cardIdx}_${idx}`} onClick={() => {
-                        // when we have foreign key, put it in as actionPostConfig.fields.push({name:"primary_key_name",type:"number", label:"primary_key_label"})
-                        // NOTE: current table's primary key is foreign key for actionPostConfig table
-                        // actionPostConfig.fields[0].foreignKeyValue = item[Object.keys(item)[0]];
-                        // setPostConfig(actionPostConfig);
-                        // if (postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })
+                      <Button key={`actionPostConfig_2_${cardIdx}_${idx}`} onClick={() => {
                         console.log(pageSubPosts)
                         window.location.hash = (pageSubPosts?.[idx]?.id || "1");
                       }} title={"View " + (pageSubPosts?.[idx]?.name)} color="yellow">
