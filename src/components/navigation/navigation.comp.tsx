@@ -18,18 +18,33 @@ const NavigationComp = ({ context: { config } }: IProps) => {
     <nav className="app-nav">
       <Button className="app-nav-opener" onClick={() => setIsOpened(!isOpened)}>
         {
-          isOpened ? 
-          <i className="fa fa-times" aria-hidden="true"></i> : 
-          <i className="fa fa-bars" aria-hidden="true"></i>
+          isOpened ?
+            <i className="fa fa-times" aria-hidden="true"></i> :
+            <i className="fa fa-bars" aria-hidden="true"></i>
         }
       </Button>
 
       <div className={`app-nav-wrapper ${isOpened ? 'opened' : ''}`}>
         <div className="app-nav-links">
           {
-            (config?.pages || []).map((page, idx) => (
-              <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
-            ))
+            (config?.pages || []).map((page, idx) =>
+              <div key={idx}>
+                {
+                  config?.pages?.find(findInPage => findInPage?.subPosts?.find(subPost => subPost.id == page.id)) ?
+                    "" :
+                    (<NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>)
+                }
+                <div className="app-nav-sub-links">
+                  {
+                    (page?.subPosts || []).map((subPage, idy) => (
+                      <div key={idy}>
+                        <NavLink to={`/${subPage.id || idy + 1}`} activeClassName="active" key={`page_${idy}`} onClick={() => setIsOpened(false)}>{subPage.name}</NavLink>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
+            )
           }
         </div>
       </div>

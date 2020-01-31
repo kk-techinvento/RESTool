@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { IConfigPostMethod, TConfigDisplayField, IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
+import { IConfigPage, IConfigPostMethod, TConfigDisplayField, IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { FormPopup } from '../formPopup/formPopup.comp';
 import { Button } from '../button/button.comp';
@@ -18,6 +18,7 @@ interface IProps {
   fields: IConfigDisplayField[]
   customActions?: IConfigCustomAction[]
   subPostsConfig?: IConfigPostMethod[] | undefined
+  pageSubPosts?: IConfigPage[] | undefined
   httpService: HttpService
   pageHeaders: any
 }
@@ -32,7 +33,7 @@ interface IPopupProps {
 }
 
 
-export const Table = ({ pageHeaders, httpService, items, fields, callbacks, customActions, subPostsConfig }: IProps) => {
+export const Table = ({ pageHeaders, httpService, items, fields, callbacks, customActions, subPostsConfig, pageSubPosts }: IProps) => {
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [postConfig, setPostConfig] = useState<null | IConfigPostMethod>(null);
   function closeFormPopup() {
@@ -155,22 +156,33 @@ export const Table = ({ pageHeaders, httpService, items, fields, callbacks, cust
                         </Button>
                       }
                     </div>
-                    <div className="actions-wrapper">
-                      {
-                        (subPostsConfig && subPostsConfig.length) &&
-                        subPostsConfig.map((actionPostConfig, idx) => actionPostConfig.fields.find(field=>field.foreignKey)?(
-                          <Button key={`actionPostConfig_${rowIdx}_${idx}`} onClick={() => {
+                    {
+                      (subPostsConfig && subPostsConfig.length) &&
+                      subPostsConfig.map((actionPostConfig, idx) => actionPostConfig.fields.find(field => field.foreignKey) ? (
+                        <div className="custom-actions-wrapper" key={`actionPostConfig_${rowIdx}_${idx}`}>
+                          <Button onClick={() => {
                             // when we have foreign key, put it in as actionPostConfig.fields.push({name:"primary_key_name",type:"number", label:"primary_key_label"})
                             // NOTE: current table's primary key is foreign key for actionPostConfig table
                             actionPostConfig.fields[0].foreignKeyValue = item[Object.keys(item)[0]];
                             setPostConfig(actionPostConfig);
-                            if(postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem})
-                          }} title={"title"}>
-                            <i className={`fa fa-${actionPostConfig.icon?actionPostConfig.icon:'cogs'}`} aria-hidden="true"></i>
+                            if (postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })
+                          }} title={"Add New " + (pageSubPosts?.[idx]?.name)} color="blue">
+                            <i className={`fa fa-${actionPostConfig?.icon ? actionPostConfig?.icon : 'cogs'}`} aria-hidden="true"></i>
                           </Button>
-                        ):"")
-                      }
-                    </div>
+                          <Button key={`actionPostConfig_${rowIdx}_${idx}`} onClick={() => {
+                            // when we have foreign key, put it in as actionPostConfig.fields.push({name:"primary_key_name",type:"number", label:"primary_key_label"})
+                            // NOTE: current table's primary key is foreign key for actionPostConfig table
+                            // actionPostConfig.fields[0].foreignKeyValue = item[Object.keys(item)[0]];
+                            // setPostConfig(actionPostConfig);
+                            // if (postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })
+                            console.log(pageSubPosts)
+                            window.location.hash = (pageSubPosts?.[idx]?.id || "1");
+                          }} title={"View " + (pageSubPosts?.[idx]?.name)} color="yellow">
+                            <i className={`fa fa-location-arrow`} aria-hidden="true"></i>
+                          </Button>
+                        </div>
+                      ) : "")
+                    }
                   </td>
                 </tr>
               );

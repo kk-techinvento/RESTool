@@ -310,6 +310,7 @@ const PageComp = ({ context }: IProps) => {
           items={filteredItems}
           customActions={customActions}
           subPostsConfig={subPostsConfig}
+          pageSubPosts={ pageSubPosts}
           httpService={httpService}
           pageHeaders={pageHeaders}
         />
@@ -327,6 +328,7 @@ const PageComp = ({ context }: IProps) => {
         items={filteredItems}
         customActions={customActions}
         subPostsConfig={subPostsConfig}
+        pageSubPosts={ pageSubPosts}
         httpService={httpService}
         pageHeaders={pageHeaders}
       />

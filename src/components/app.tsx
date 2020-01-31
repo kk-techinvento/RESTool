@@ -34,6 +34,9 @@ function App() {
   const [error, setError] = useState<string | null>(null);
 
   async function loadConfig(url: string | null, configObject: IConfig | null): Promise<void> {
+    if(!url && !configObject){
+      return;
+    }
     try {
       const remoteConfig: IConfig = configObject && !url ? configObject : await ConfigService.getRemoteConfig(url || "");
 
@@ -53,8 +56,6 @@ function App() {
       }
 
       setConfig(remoteConfig);
-      console.log("new config: ", config);
-      
     } catch (e) {
       console.error('Could not load config file', e);
     }
@@ -97,7 +98,6 @@ function App() {
       setError(errorMessage);
       return;
     } else {
-      console.log("new config", config);
       loadConfig(null, config)
     }
   }, [config]);
@@ -149,7 +149,7 @@ function App() {
                 {
                   config &&
                   <Switch>
-                    <Route exact path="/:page" component={Page} />
+                    <Route exact path="/:page" component={Page} key={config.name} />
                     <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
                   </Switch>
                 }
