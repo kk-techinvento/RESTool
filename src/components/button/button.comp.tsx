@@ -8,7 +8,7 @@ interface IProps {
   title?: string
   className?: string
   onClick?: (e: any) => void
-  color?: 'gray' | 'blue' | 'green' | 'red'
+  color?: 'gray' | 'blue' | 'green' | 'red' | 'yellow'
 }
 
 export const Button = (props: IProps) => {

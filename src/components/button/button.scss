@@ -33,4 +33,31 @@
       background-color: #2dc450;
     }
   }
+
+  &.red {
+    background: red;
+    color: #fff;
+  
+    &:hover {
+      background-color: darkred;
+    }
+  }
+
+  &.blue {
+    background: #476897;
+    color: #fff;
+  
+    &:hover {
+      background-color: #475887;
+    }
+  }
+
+  &.yellow {
+    background: #768343;
+    color: #fff;
+  
+    &:hover {
+      background-color: #667333;
+    }
+  }
 }
