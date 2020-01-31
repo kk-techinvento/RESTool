@@ -104,28 +104,28 @@ function App() {
 
   const appName: string = config?.name || defaultAppName;
 
-  let uploadAction = (data: any) => {
-    console.log("uploading ", data);
-    if (data.length && data.length < 2) {
-      let fileReader = new FileReader();
-      fileReader.onloadend = (e) => {
-        let jsonText = "" + e.target?.result;
-        console.log("file read", jsonText);
+  // let uploadAction = (data: any) => {
+  //   console.log("uploading ", data);
+  //   if (data.length && data.length < 2) {
+  //     let fileReader = new FileReader();
+  //     fileReader.onloadend = (e) => {
+  //       let jsonText = "" + e.target?.result;
+  //       console.log("file read", jsonText);
 
-        let newFileName = (new Date()).valueOf() + ".json";
+  //       let newFileName = (new Date()).valueOf() + ".json";
         
-        console.log(window.location.host + "/public/" + newFileName);
-        setConfig(JSON.parse(jsonText));
-      }
-      fileReader.readAsText(data[0]);
-    }
-  }
+  //       console.log(window.location.host + "/public/" + newFileName);
+  //       setConfig(JSON.parse(jsonText));
+  //     }
+  //     fileReader.readAsText(data[0]);
+  //   }
+  // }
 
   return (
     <div>
-      <div>
+      {/* <div>
         <input type="file" title="upload config file" onChange={(e) => uploadAction(e.target.files)} />
-      </div>
+      </div> */}
       <div className="restool-app">
         {
           !config ?
