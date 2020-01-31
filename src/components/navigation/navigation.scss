@@ -51,36 +51,74 @@
       justify-content: center;
       align-items: center;
       align-self: flex-start;
-    }
 
-    a {
-      display: block;
-      color: v(navItemText, #fff);
-      text-decoration: none;
-      padding: 10px 20px;
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.3em;
-      cursor: pointer;
-      transition: 0.2s background-color ease 0s;
-
-      @media screen and (max-width: 800px) { 
-        border-radius: 50em;
-        font-size: 18px;
-        font-weight: 500;
-        margin-bottom: 10px;
-
-        &:last-child {
-          margin-bottom: 0;
+      a {
+        display: block;
+        color: v(navItemText, #fff);
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.3em;
+        cursor: pointer;
+        transition: 0.2s background-color ease 0s;
+  
+        @media screen and (max-width: 800px) { 
+          border-radius: 50em;
+          font-size: 18px;
+          font-weight: 500;
+          margin-bottom: 10px;
+  
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+    
+        &:hover {
+          background: v(navItemHoverBackground, #424479);
+        }
+    
+        &.active {
+          background: v(navItemActiveBackground, #57578f);
         }
       }
+    }
+
+    .app-nav-sub-links {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      align-self: flex-start;
+      background: #575338;
+      a {
+        display: block;
+        color: v(navItemText, #fff);
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.3em;
+        cursor: pointer;
+        transition: 0.2s background-color ease 0s;
   
-      &:hover {
-        background: v(navItemHoverBackground, #424479);
-      }
+        @media screen and (max-width: 800px) { 
+          border-radius: 50em;
+          font-size: 18px;
+          font-weight: 500;
+          margin-bottom: 10px;
   
-      &.active {
-        background: v(navItemActiveBackground, #57578f);
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+    
+        &:hover {
+          background: v(navItemHoverBackground, #68755a);
+        }
+    
+        &.active {
+          background: v(navItemActiveBackground, #79866b);
+        }
       }
     }
   }

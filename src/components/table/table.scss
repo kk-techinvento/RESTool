@@ -58,14 +58,24 @@
       max-width: 1px;
     }
 
+    .custom-actions-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      > * {
+        margin: 5px 5px;
+        width: 42px;
+        height: 42px;
+      }
+    }
     .actions-wrapper {
       display: flex;
       align-items: center;
+      vertical-align: middle;
       justify-content: flex-start;
 
       > * {
         margin: 0 5px;
-        border-radius: 50em;
         width: 42px;
         height: 42px;
         font-size: 18px;
@@ -77,19 +87,40 @@
         }
 
         &.green {
-          background: #1cb841;
-          color: #fff;
+          background: #fff;
+          color: #2dc450;
       
           &:hover {
-            background-color: #2dc450;
+            background: #1cb841;
+            color: #fff;
           }
         }
         &.red {
-          background: red;
-          color: #fff;
+          color: red;
+          background: #fff;
         
           &:hover {
-            background-color: darkred;
+            color:#fff;
+            background: darkred;
+          }
+        }
+        
+        &.blue {
+          color: deepskyblue;
+          background: #fff;
+        
+          &:hover {
+            background: dodgerblue;
+            color: #fff;
+          }
+        }
+  
+        &.yellow {
+          background: yellow;
+          color: brown;
+        
+          &:hover {
+            background-color: gold;
           }
         }
       }

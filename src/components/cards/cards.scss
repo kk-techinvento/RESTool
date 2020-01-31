@@ -90,7 +90,7 @@
     }
   }
 
-  .actions-wrapper {
+  .custon-actions-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,8 +99,20 @@
     z-index: 10;
 
     > * {
+      margin: 2px 5px;
+    }
+  }
+  .actions-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px;
+    margin: 10px;
+    z-index: 10;
+
+    > * {
       margin: 0 5px;
-      border-radius: 50em;
+      // border-radius: 50em;
       width: 42px;
       height: 42px;
       font-size: 18px;
@@ -112,19 +124,40 @@
         background: v(actionButtonHoverBackground, #ebebeb);
       }
       &.green {
-        background: #1cb841;
-        color: #fff;
+        background: #fff;
+        color: #2dc450;
     
         &:hover {
-          background-color: #2dc450;
+          background: #1cb841;
+          color: #fff;
         }
       }
       &.red {
-        background: red;
-        color: #fff;
+        color: red;
+        background: #fff;
       
         &:hover {
-          background-color: darkred;
+          color:#fff;
+          background: darkred;
+        }
+      }
+      
+      &.blue {
+        color: deepskyblue;
+        background: #fff;
+      
+        &:hover {
+          background: dodgerblue;
+          color: #fff;
+        }
+      }
+
+      &.yellow {
+        background: yellow;
+        color: brown;
+      
+        &:hover {
+          background-color: gold;
         }
       }
     }
