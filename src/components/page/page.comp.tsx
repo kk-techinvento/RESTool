@@ -36,17 +36,12 @@ const PageComp = ({ context }: IProps) => {
   const { push, location } = useHistory();
   const { activePage, error, setError, httpService } = context;
   const pageHeaders: any = activePage?.requestHeaders || {};
-  const pageSubPosts: IConfigPage[] | undefined = activePage?.subPosts || [];
+  const subPostsConfig: IConfigPostMethod[] | undefined = activePage?.subPosts || [];
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const customActions: IConfigCustomAction[] = activePage?.customActions || [];
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
-  let subPostsConfig: IConfigPostMethod[] | undefined = pageSubPosts.length ? [] : undefined;
-  for (let index = 0; index < pageSubPosts.length; index++) {
-    const element = pageSubPosts[index].methods.post;
-    subPostsConfig?.push(element)
-  }
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
   const [loading, setLoading] = useState<boolean>(false);
@@ -310,7 +305,6 @@ const PageComp = ({ context }: IProps) => {
           items={filteredItems}
           customActions={customActions}
           subPostsConfig={subPostsConfig}
-          pageSubPosts={ pageSubPosts}
           httpService={httpService}
           pageHeaders={pageHeaders}
         />
@@ -328,7 +322,6 @@ const PageComp = ({ context }: IProps) => {
         items={filteredItems}
         customActions={customActions}
         subPostsConfig={subPostsConfig}
-        pageSubPosts={ pageSubPosts}
         httpService={httpService}
         pageHeaders={pageHeaders}
       />

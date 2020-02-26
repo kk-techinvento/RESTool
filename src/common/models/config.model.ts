@@ -32,7 +32,7 @@ export interface IConfigPage {
   requestHeaders: any
   methods: IConfigMethods
   customActions: IConfigCustomAction[]
-  subPosts: IConfigPage[] | null
+  subPosts: IConfigPostMethod[] | null
 }
 
 export interface IConfigMethods {
@@ -114,6 +114,9 @@ export interface IConfigGetSingleMethod extends IConfigMethod {
 }
 
 export interface IConfigPostMethod extends IConfigMethod {
+  name: string
+  id: string
+  description: string
   fields: IConfigInputField[]
   icon: string
 }

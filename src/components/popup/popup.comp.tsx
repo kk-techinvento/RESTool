@@ -24,14 +24,14 @@ class PortalPopup extends Component {
 
   constructor(props: any) {
     super(props);
-    
+
     this.el = document.createElement('div');
   }
-  
+
   componentDidMount = () => {
     portalRoot.appendChild(this.el);
   }
-  
+
   componentWillUnmount = () => {
     portalRoot.removeChild(this.el);
   }
@@ -48,17 +48,17 @@ export class Popup extends Component<IPopupProps> {
     return (
       <PortalPopup>
         {
-          this.props.show ? 
-          <div className={`popup ${this.props.className || ''}`} style={style}>
-            <div className="overlay" onClick={(e: any) => this.props.closeCallback(e)}></div>
-            <div className="popup-content" ref={this.props.refCallback}>
-              {this.props.children}
-              <button title="Close" className="close-popup" onClick={(e: any) => this.props.closeCallback(e)}>
-                <i className="fa fa-times" aria-hidden="true"></i>
-              </button>
-            </div>
-          </div> :
-          null
+          this.props.show ?
+            <div className={`popup ${this.props.className || ''}`} style={style}>
+              <div className="overlay" onClick={(e: any) => this.props.closeCallback(e)}></div>
+              <div className="popup-content" ref={this.props.refCallback}>
+                {this.props.children}
+                <button title="Close" className="close-popup" onClick={(e: any) => this.props.closeCallback(e)}>
+                  <i className="fa fa-times" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div> :
+            null
         }
       </PortalPopup>
     );
@@ -74,7 +74,7 @@ export class Popup extends Component<IPopupProps> {
 
   _handleKeyDown = (e: KeyboardEvent) => {
     const { show, closeCallback } = this.props;
-    
+
     if (show && e.keyCode === 27) {
       closeCallback(e);
     }

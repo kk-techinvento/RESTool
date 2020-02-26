@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { TConfigDisplayField, IConfigDisplayField, IConfigCustomAction, IConfigPostMethod, IConfigPage } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -18,7 +18,7 @@ interface IProps {
   fields: IConfigDisplayField[]
   customActions?: IConfigCustomAction[]
   subPostsConfig?: IConfigPostMethod[] | undefined
-  pageSubPosts?: IConfigPage[] | undefined
+  pageSubPosts?: IConfigPostMethod[] | undefined
   httpService: HttpService
   pageHeaders: any
 }
@@ -35,6 +35,11 @@ export const Cards = ({ items, fields, callbacks, customActions, subPostsConfig,
   const [isOpened, setIsOpened] = useState<boolean>(false);
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [postConfig, setPostConfig] = useState<null | IConfigPostMethod>(null);
+
+  useEffect(()=>{}, [openedPopup])
+  useEffect(()=>{
+    if (postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })
+  }, [postConfig])
   function closeFormPopup() {
     setOpenedPopup(null);
   }
@@ -108,6 +113,7 @@ export const Cards = ({ items, fields, callbacks, customActions, subPostsConfig,
     });
   }
 
+  console.table(subPostsConfig)
   return (
     <div className="cards-wrapper">
       {
@@ -162,14 +168,12 @@ export const Cards = ({ items, fields, callbacks, customActions, subPostsConfig,
                         actionPostConfig.fields[0].foreignKeyValue = item[Object.keys(item)[0]];
                         setPostConfig(actionPostConfig);
                         if (postConfig) setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })
-                        
-                      }} title={"Add New " + (pageSubPosts?.[idx]?.name)} color="blue">
+                      }} title={"Add New " + (actionPostConfig?.name)} color="blue">
                         <i className={`fa fa-${actionPostConfig?.icon ? actionPostConfig?.icon : 'cogs'}`} aria-hidden="true"></i>
                       </Button>
                       <Button key={`actionPostConfig_2_${cardIdx}_${idx}`} onClick={() => {
-                        console.log(pageSubPosts)
-                        window.location.hash = (pageSubPosts?.[idx]?.id || "1");
-                      }} title={"View " + (pageSubPosts?.[idx]?.name)} color="yellow">
+                        window.location.hash = (actionPostConfig?.id || "1");
+                      }} title={"View " + (actionPostConfig?.name)} color="yellow">
                         <i className={`fa fa-location-arrow`} aria-hidden="true"></i>
                       </Button>
                     </div>
